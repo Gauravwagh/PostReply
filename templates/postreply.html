@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'navbar.html' %}
+ 
+    <div class="container">
+      <div class="row">
+        <div class="span8">
+		   <div class="">
+                  <h1>Add a Crave!</h1>
+                  <form>
+                    <textarea rows="3" class="span6" id="textpost"></textarea>
+                    <input type="button" id="postbutton" value="submit" class="btn btn-success"/>
+                  </form>
+                </div>
+        {% for post in post %}
+
+          <div class="corgi_feed_well">
+            <div class="individual_feed_item">
+              <div class="feed_item">
+                <div class="feed_body">
+                  <div class="row">
+                    <div class="feed_profile_pic">
+                      <img src="/media/img/images.jpg" alt="meta image" class="meta_image" />
+                    </div>
+                    <div class="feed_text">
+                      <h4 style='color:red;'>{{post.post}}</h4>
+                    </div>
+                  </div>
+                </div>
+                <div class="comment_area">
+                  <p>Add a Reply</p>
+                  <form>
+                    <textarea rows="3" id= "replyid" class="span6"></textarea> <input type="hidden" id="postid" value="{{post.id}}" class="btn"/>
+                    <input type="button"  class="btn btn-primary replybutton" value="reply" />
+                  </form>
+                </div>
+                <hr class="feed_hr" />
+                <div class="bottom_meta">
+                  <div class="row">
+                    <div class="bottom_left">
+                     
+                    </div>
+                    <div class="bottom_right">
+                      <a href="#">{{post.user.username}}</a> <span>|</span> <a href="#" class="show_comment_link">comment</a> <span>|</span> {{post.posted_date}}
+                    </div> 
+					<div class= "reply" style="margin-left:10%;">
+					{% for rep in post.reply %}
+					
+					<div class="corgi_feed_well">
+            <div class="individual_feed_item">
+              <div class="feed_item">
+                <div class="feed_body">
+                  <div class="row">
+                    <div class="feed_profile_pic">
+                      <img src="/media/img/images.jpg" alt="meta image" class="meta_image" />
+                    </div>
+                    <div class="feed_text">
+                      <h6>{{rep.reply}}</h6>
+                    </div>
+                  </div>
+                </div>
+         
+                <hr class="feed_hr" />
+                <div class="bottom_meta">
+                  <div class="row">
+                    <div class="bottom_left">
+                     
+                    </div>
+                    <div class="bottom_right">
+                      <a href="#">{{rep.user.username}}</a> <span>|</span> <span>|</span> {{rep.posted_date}}
+                    </div> 
+					
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+					{% endfor %}
+						
+					
+					</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+		  
+		  {% endfor %}
+
+        
+        </div> <!-- end span8 -->
+        
+      </div>
+     
+    </div>
+    <br/><br/>
+    <div class="corgi_footer">
+      <div class="container">
+        <div class="row">
+          <div class="span12">
+            <ul>
+              <li><a href="">Posts</a></li>
+              <li><a href="">Replies</a></li>
+              
+            </ul>
+            <div class="corgi_copyright">
+              &copy; 2014 EveryCrave
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+{% endblock %}
+
+{% block js %}
+
+<script>
+	$(document).ready(function(){
+	$( "#postbutton" ).click(function() {
+			//alert( "post submitted	." );
+				var post = $('#textpost').val();
+				data = 
+				{	
+					post:post
+				};
+				$.ajax({
+					url: "/postreply/post/",
+					type: "POST",
+					data: data,
+					success: function(response){
+					
+						location.reload();
+					},
+					error: function(){
+					alert("error");
+					
+					}
+					});				
+		});
+		
+		$( ".replybutton" ).click(function() {
+			//alert( "post submitted	." );
+				var reply = $('#replyid').val();
+				var postid = $('#postid').val();
+				 
+				data = 
+				{	
+					reply:reply,
+					postid:postid
+				};
+				$.ajax({
+					url: "/postreply/reply/",
+					type: "POST",
+					data: data,
+					success: function(response){
+					
+						location.reload();
+					},
+					error: function(){
+					alert("error");
+					
+					}
+					});
+					
+					
+				
+				
+				
+				
+				
+		});
+		
+	});
+	
+</script>
+{% endblock %}
+
